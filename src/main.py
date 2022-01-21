@@ -1,31 +1,40 @@
-import datetime
+import sys
+import uvicorn
+import asyncio
+import config
 from typing import Optional,List
-import datetime as dt
-from starlette import status
-
+from loguru import logger
 from fastapi import FastAPI
+from app.api.routers import router
 
-from pydantic import BaseModel
+
+
+asyncio.set_event_loop_policy(None)
 
 app = FastAPI()
 
+app.include_router(router)
 
 
-class Item(BaseModel):
-    item_id: int
-    q: Optional[str]
-    
+@app.on_event('startup')
+async def startup_event():
+    #app.add_event_handler('startup', init_logging)
+    logger.info("Server Startup")
+
+
+@app.on_event('shutdown')
+async def shutdown_event():
+    # todo close all sessions 
+    # todo close all connections
+    logger.info("Server Shutdown")
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/items/{item_id}",
-    tags=["patients"],
-    response_model=Item,
-    summary="list of patients",
-    response_description="Get list of patients",
-    status_code=status.HTTP_201_CREATED)
-def read_item(item_id: int, q: str) -> Item:
-    return {"item_id": item_id, "q": q}
-
+if __name__ == '__main__':
+    if '--reload' in sys.argv:
+        uvicorn.run("main:app", host="127.0.0.1", port=config.PORT, log_level="info",reload=True,debug=True)
+    else:
+        uvicorn.run(app, host=config.HOST, port=config.PORT, log_level="info")
