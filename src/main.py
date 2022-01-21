@@ -28,10 +28,6 @@ async def shutdown_event():
     # todo close all connections
     logger.info("Server Shutdown")
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
 
 if __name__ == '__main__':
     if '--reload' in sys.argv:

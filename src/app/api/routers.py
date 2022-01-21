@@ -14,7 +14,7 @@ router = APIRouter()
     
 @router.get("/")
 async def read_root():
-    return {"Hello": "World"}
+    return {"Hello": "World."}
 
 
 @router.get("/items/{item_id}",
