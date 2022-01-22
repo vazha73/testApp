@@ -18,7 +18,7 @@ async def read_root():
 
 @router.get("/test")
 async def read_root():
-    return {"Test": "Working."}
+    return {"Test": "test2"}
 
 @router.get("/items/{item_id}",
     tags=["read_item"],
