@@ -33,6 +33,14 @@ app = FastAPI(
     openapi_tags=tags_metadata
     )
 
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=env_origins.split(sep=','),
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
 app.include_router(router)
 
 
@@ -40,6 +48,8 @@ app.include_router(router)
 async def startup_event():
     #app.add_event_handler('startup', init_logging)
     logger.info("Server Startup")
+    print(f"Server Startup http://localhost:{config.PORT}")
+    print (f"swagger docs: http://localhost:{config.PORT}/docs")
 
 
 @app.on_event('shutdown')

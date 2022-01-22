@@ -7,11 +7,13 @@
 `pip3 install -r requirements.txt`
 
 ## Start
-* ./src/main.py
+* py ./src/main.py
 
 **or**
 
-* ./src/main.py --reload
+* py ./src/main.py --reload
+
+## Config
 
 # Restful docs
 * [http://localhost:8000/docs](http://localhost:8000/docs)
