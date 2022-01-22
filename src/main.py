@@ -6,6 +6,10 @@ from typing import Optional,List
 from loguru import logger
 from fastapi import FastAPI
 from app.api.routers import router
+from app.api.calculation.andrew import router as andrew_router
+from app.api.calculation.george import router as george_router
+from app.api.calculation.vasily import router as vasily_router
+from app.api.calculation.vazha import router as vazha_router
 
 asyncio.set_event_loop_policy(None)
 
@@ -42,6 +46,11 @@ app = FastAPI(
 # )
 #
 app.include_router(router)
+app.include_router(andrew_router)
+app.include_router(george_router)
+app.include_router(vasily_router)
+app.include_router(vazha_router)
+
 
 
 @app.on_event('startup')
@@ -58,7 +67,8 @@ async def shutdown_event():
     # todo close all connections
     logger.info("Server Shutdown")
 
-
+ 
+ 
 if __name__ == '__main__':
     if '--reload' in sys.argv:
         uvicorn.run("main:app", host="127.0.0.1", port=config.PORT, log_level="info",reload=True,debug=True)
