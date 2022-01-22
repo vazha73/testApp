@@ -7,11 +7,31 @@ from loguru import logger
 from fastapi import FastAPI
 from app.api.routers import router
 
-
-
 asyncio.set_event_loop_policy(None)
 
-app = FastAPI()
+tags_metadata = [
+    {
+        "name": "Test",
+        "description": "Operations with Dashboard. ",
+    },
+    {
+        "name": "Obsrvation",
+        "description": "Operations with chat.",
+    },
+    {
+        "name": "default",
+        "description": "todo remove this tag",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+]
+app = FastAPI(
+    title="Text Service Massage Fabric",
+    debug=True,
+    openapi_tags=tags_metadata
+    )
 
 app.include_router(router)
 
