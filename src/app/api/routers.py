@@ -16,6 +16,9 @@ router = APIRouter()
 async def read_root():
     return {"Hello": "World."}
 
+@router.get("/test")
+async def read_root():
+    return {"Test": "test2"}
 
 @router.get("/items/{item_id}",
     tags=["read_item"],
