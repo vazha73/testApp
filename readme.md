@@ -13,7 +13,19 @@
 
 * py ./src/main.py --reload
 
-## Config
+## Config parameters
+| Name                                          | Type            | Default | Description                                                                                    |
+| --------------------------------------------- | --------------- | :------: | ---------------------------------------------------------------------------------------------- |
+| **APP_HOST**                                  | string       |  "0.0.0.0" | Bind socket to this host
+| **APP_PORT**                                  | int          |    8000    | Bind socket to this port
+
+
+## Treble shooting
+#### Windows 10+
+after install python need add permissions for running scripts from terminal
+
+- run powershell as administrator
+- `Set-ExecutionPolicy RemoteSigned`
 
 # Restful docs
 * [http://localhost:8000/docs](http://localhost:8000/docs)

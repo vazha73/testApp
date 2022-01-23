@@ -68,7 +68,6 @@ async def shutdown_event():
     logger.info("Server Shutdown")
 
  
- 
 if __name__ == '__main__':
     if '--reload' in sys.argv:
         uvicorn.run("main:app", host="127.0.0.1", port=config.PORT, log_level="info",reload=True,debug=True)

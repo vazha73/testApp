@@ -2,6 +2,7 @@
     "cSpell.words": [
         "pydantic",
         "starlette",
-        "uvicorn"
+        "uvicorn",
+        "venv"
     ]
 }
