@@ -54,7 +54,7 @@ def calculate(x1: Decimal, x2: Decimal, op: Operation) -> CalcResult:
         case Operation.divide:
             return CalcResult(result=x1/x2, operation="/")
         case _:
-            raise Exception('I know Python!')
+            raise Exception(f'invalid parameter value "op = {op}")')
 
 
 @router.post("/vazha/calculator",
