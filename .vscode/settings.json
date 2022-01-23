@@ -3,6 +3,7 @@
         "pydantic",
         "starlette",
         "uvicorn",
+        "Vazha",
         "venv"
     ]
 }

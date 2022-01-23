@@ -3,6 +3,8 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from decimal import Decimal
 
+import pydantic
+
 router = APIRouter()
 
 
@@ -14,10 +16,17 @@ class Operation(str, Enum):
 
 
 class CalcRequest(BaseModel):
-    x1: Decimal = Field(description="Decimal", ge=-10**64, le=10**64)
-    x2: Decimal = Field(description="Decimal", ge=-10**64, le=10**64)
+    x1: Decimal = Field(description="Decimal", ge=-10**32, le=10**32,example=3.5)
+    x2: Decimal = Field(description="Decimal", ge=-10**32, le=10**32,example=1.5)
     operation: Operation = Field(
-        description="add, multiply, subtract or divide")
+        description="add, multiply, subtract or divide",example=Operation.add)
+
+    @pydantic.validator("operation")
+    @classmethod
+    def validate_all_fields_one_by_one(cls, field_value, values):
+        if field_value == Operation.divide and values["x2"] == 0:
+            raise ValueError('Division by zero is not allowed')
+        return field_value
 
     class Config:
         use_enum_values = True
@@ -48,8 +57,8 @@ def calculate(x1: Decimal, x2: Decimal, op: Operation) -> CalcResult:
             raise Exception('I know Python!')
 
 
-@router.post("/vazha_calc",
-             name="vazha_calc",
+@router.post("/vazha/calculator",
+             name="vazha:calculator",
              response_model=Result,
              status_code=status.HTTP_200_OK)
 async def read_root(request: CalcRequest, response: Response) -> Result:
@@ -63,10 +72,6 @@ async def read_root(request: CalcRequest, response: Response) -> Result:
     --------------------------------------------------------
     Author : Vazha Meladze :)
     """
-    if request.operation == Operation.divide and request.x2 == 0:
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        #raise HTTPException(status_code=422, detail="Cannot divide by zero. Division by zero is not allowed")
-        return {"success": False, "message": "Cannot divide by zero. Division by zero is not allowed"}
-
     res = calculate(x1=request.x1, x2=request.x2, op=request.operation)
-    return {"success": True, "result": res.result, "message": f"{request.x1} {res.operation} {request.x2} = {res.result}"}
+    return Result(success=True, result=res.result, message=f"{request.x1} {res.operation} {request.x2} = {res.result}")
+    #return {"success": True, "result": res.result, "message": f"{request.x1} {res.operation} {request.x2} = {res.result}"}
