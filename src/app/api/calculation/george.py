@@ -3,6 +3,13 @@ from pydantic import BaseModel, validator, Field
 from enum import Enum
 router = APIRouter()
 
+
+class Operations(str, Enum):
+    plus = 'plus'
+    minus = 'minus'
+    multiply = 'multiply'
+    divide = 'divide'
+
 class Calculator(BaseModel):
     a: float = Field(description="Float", ge=-10**32, le=10**32, example=3.5)
     b: float = Field(description="Float", ge=-10**32, le=10**32, example=1.5)
@@ -15,34 +22,28 @@ class Calculator(BaseModel):
             raise ValueError("invalid operator. must be (plus, minus, multiply, divide)")
         elif values["b"] == 0 and op == "divide":
             raise ValueError("can't divide by 0")
-        return op        
+        return op     
 
-class Operations(str, Enum):
-    plus = 'plus'
-    minus = 'minus'
-    multiply = 'multiply'
-    divide = 'divide'
+    def ___init___(self, a, b, op):
+        self.a = a
+        self.b = b
+        self.op = op
 
-class Calculate:
-    def __init__(self, a, b):
-        self.a = float(a)
-        self.b = float(b)
-    
-    def solution(self, op):
-        if op == Operations.plus:
+    def solution(self):
+        if self.op == Operations.plus:
             return self.a + self.b
-        elif op == Operations.minus:
+        elif self.op == Operations.minus:
             return self.a - self.b
-        elif op == Operations.multiply:
+        elif self.op == Operations.multiply:
             return self.a * self.b
-        elif op == Operations.divide:
+        elif self.op == Operations.divide:
             return self.a / self.b
+
 
 @router.post("/giorgi/calculator/")
 async def read_root(calculator: Calculator):
     """Calculator"""
-    answer = Calculate(calculator.a, calculator.b)
-    return {"answer": answer.solution(calculator.op)}
+    return {"answer": calculator.solution()}
 
     
 
