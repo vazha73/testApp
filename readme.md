@@ -7,17 +7,17 @@
 `pip3 install -r requirements.txt`
 
 ## Start
-* py ./src/main.py
+* `py ./src/main.py`
 
 **or**
 
-* py ./src/main.py --reload
+* `py ./src/main.py --reload`
 
 ## Config parameters
-| Name                                          | Type            | Default | Description                                                                                    |
-| --------------------------------------------- | --------------- | :------: | ---------------------------------------------------------------------------------------------- |
-| **APP_HOST**                                  | string       |  "0.0.0.0" | Bind socket to this host
-| **APP_PORT**                                  | int          |    8000    | Bind socket to this port
+| Name                                          | Type            | Requred | Default            |Description                                                                                    |
+| --------------------------------------------- | --------------- | :------: | :------: | ---------------------------------------------------------------------------------------------- |
+| **APP_HOST**                                  | string      | ❌ |  "0.0.0.0" | Bind socket to this host
+| **APP_PORT**                                  | int         | ❌ |    8000    | Bind socket to this port
 
 
 ## Treble shooting
@@ -29,3 +29,6 @@ after install python need add permissions for running scripts from terminal
 
 # Restful docs
 * [http://localhost:8000/docs](http://localhost:8000/docs)
+
+# Testing
+  `pytest -v`

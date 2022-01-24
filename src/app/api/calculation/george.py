@@ -9,7 +9,10 @@ class Operations(str, Enum):
     minus = 'minus'
     multiply = 'multiply'
     divide = 'divide'
-
+    
+class Result(BaseModel):
+    asnwer: float
+    
 class Calculator(BaseModel):
     a: float = Field(description="Float", ge=-10**32, le=10**32, example=3.5)
     b: float = Field(description="Float", ge=-10**32, le=10**32, example=1.5)
@@ -40,10 +43,10 @@ class Calculator(BaseModel):
             return self.a / self.b
 
 
-@router.post("/giorgi/calculator/")
+@router.post("/giorgi/calculator/",response_model=Result,)
 async def read_root(calculator: Calculator):
     """Calculator"""
-    return {"answer": calculator.solution()}
+    return Result(answer=calculator.solution())
 
     
 
