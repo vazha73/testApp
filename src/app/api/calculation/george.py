@@ -1,11 +1,19 @@
 from fastapi import APIRouter
-from pydantic import BaseModel, validator, ValidationError
+from pydantic import BaseModel, validator, Field
+from enum import Enum
 router = APIRouter()
 
+
+class Operations(str, Enum):
+    plus = 'plus'
+    minus = 'minus'
+    multiply = 'multiply'
+    divide = 'divide'
+
 class Calculator(BaseModel):
-    a: float
-    b: float
-    op: str
+    a: float = Field(description="Float", ge=-10**32, le=10**32, example=3.5)
+    b: float = Field(description="Float", ge=-10**32, le=10**32, example=1.5)
+    op: str = Field(description="plus, minus, multiply, divide", example="plus")
 
     @validator("op")
     def is_valid_operator(cls, op, values):
@@ -14,27 +22,30 @@ class Calculator(BaseModel):
             raise ValueError("invalid operator. must be (plus, minus, multiply, divide)")
         elif values["b"] == 0 and op == "divide":
             raise ValueError("can't divide by 0")
-        return op        
+        return op     
 
-class Calculate:
-    def __init__(self, a, b):
+    def ___init___(self, a, b, op):
         self.a = a
         self.b = b
-    
-    def solution(self, op):
-        if op == "plus":
+        self.op = op
+
+    def solution(self):
+        if self.op == Operations.plus:
             return self.a + self.b
-        elif op == "minus":
+        elif self.op == Operations.minus:
             return self.a - self.b
-        elif op == "multiply":
+        elif self.op == Operations.multiply:
             return self.a * self.b
-        elif op == "divide":
+        elif self.op == Operations.divide:
             return self.a / self.b
+
 
 @router.post("/giorgi/calculator/")
 async def read_root(calculator: Calculator):
-    answer = Calculate(calculator.a, calculator.b)
-    return answer.solution(calculator.op)
+    """Calculator"""
+    return {"answer": calculator.solution()}
+
+    
 
 
 # @router.post("/giorgi/calculator/")
@@ -46,7 +57,7 @@ async def read_root(calculator: Calculator):
 
 #     try:
 #         return operators[op] (a, b)
-#     except ZeroDivisionError:
+#     except ZerodivideError:
 #         return {"error": "can't divide by 0"}
 #     except Exception:
 #         return {"error": "unknown error"}
