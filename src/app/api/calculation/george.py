@@ -1,11 +1,12 @@
 from fastapi import APIRouter
-from pydantic import BaseModel, validator, ValidationError
+from pydantic import BaseModel, validator, Field
+from enum import Enum
 router = APIRouter()
 
 class Calculator(BaseModel):
-    a: float
-    b: float
-    op: str
+    a: float = Field(description="Float", ge=-10**32, le=10**32, example=3.5)
+    b: float = Field(description="Float", ge=-10**32, le=10**32, example=1.5)
+    op: str = Field(description="plus, minus, multiply, divide", example="plus")
 
     @validator("op")
     def is_valid_operator(cls, op, values):
@@ -16,25 +17,34 @@ class Calculator(BaseModel):
             raise ValueError("can't divide by 0")
         return op        
 
+class Operations(str, Enum):
+    plus = 'plus'
+    minus = 'minus'
+    multiply = 'multiply'
+    divide = 'divide'
+
 class Calculate:
     def __init__(self, a, b):
-        self.a = a
-        self.b = b
+        self.a = float(a)
+        self.b = float(b)
     
     def solution(self, op):
-        if op == "plus":
+        if op == Operations.plus:
             return self.a + self.b
-        elif op == "minus":
+        elif op == Operations.minus:
             return self.a - self.b
-        elif op == "multiply":
+        elif op == Operations.multiply:
             return self.a * self.b
-        elif op == "divide":
+        elif op == Operations.divide:
             return self.a / self.b
 
 @router.post("/giorgi/calculator/")
 async def read_root(calculator: Calculator):
+    """Calculator"""
     answer = Calculate(calculator.a, calculator.b)
-    return answer.solution(calculator.op)
+    return {"answer": answer.solution(calculator.op)}
+
+    
 
 
 # @router.post("/giorgi/calculator/")
@@ -46,7 +56,7 @@ async def read_root(calculator: Calculator):
 
 #     try:
 #         return operators[op] (a, b)
-#     except ZeroDivisionError:
+#     except ZerodivideError:
 #         return {"error": "can't divide by 0"}
 #     except Exception:
 #         return {"error": "unknown error"}
