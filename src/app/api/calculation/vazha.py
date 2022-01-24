@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Response, status
 from pydantic import BaseModel, Field
 from enum import Enum
-from decimal import Decimal
 
 import pydantic
 
@@ -16,8 +15,8 @@ class Operation(str, Enum):
 
 
 class CalcRequest(BaseModel):
-    x1: Decimal = Field(description="Decimal", ge=-10**32, le=10**32,example=3.5)
-    x2: Decimal = Field(description="Decimal", ge=-10**32, le=10**32,example=1.5)
+    x1: float = Field(description="float", ge=-10**32, le=10**32,example=3.5)
+    x2: float = Field(description="float", ge=-10**32, le=10**32,example=1.5)
     operation: Operation = Field(
         description="add, multiply, subtract or divide",example=Operation.add)
 
@@ -35,15 +34,15 @@ class CalcRequest(BaseModel):
 class Result (BaseModel):
     success: bool
     message: str = None
-    result: Decimal = None
+    result: float = None
 
 
 class CalcResult(BaseModel):
-    result: Decimal
+    result: float
     operation: str
 
 
-def calculate(x1: Decimal, x2: Decimal, op: Operation) -> CalcResult:
+def calculate(x1: float, x2: float, op: Operation) -> CalcResult:
     match op:
         case Operation.add:
             return CalcResult(result=x1+x2, operation="+")

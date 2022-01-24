@@ -51,7 +51,8 @@ app.include_router(george_router)
 app.include_router(vasily_router)
 app.include_router(vazha_router)
 
-
+def get_application():
+     return app
 
 @app.on_event('startup')
 async def startup_event():
